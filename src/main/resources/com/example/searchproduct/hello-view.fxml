@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="837.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.searchproduct.HelloController">
+   <children>
+      <AnchorPane layoutY="88.0" prefHeight="559.0" prefWidth="837.0">
+         <children>
+            <ScrollPane layoutX="8.0" layoutY="-1.0" prefHeight="559.0" prefWidth="819.0">
+              <content>
+                  <ListView fx:id="_items" minHeight="100" minWidth="100" prefHeight="545.0" prefWidth="805.0" />
+              </content>
+            </ScrollPane>
+         </children>
+      </AnchorPane>
+          <Button layoutX="471.0" layoutY="40.0" mnemonicParsing="false" onAction="#onSearchButtonClick" prefHeight="35.0" prefWidth="104.0" style="-fx-background-color: #F39C63;" text="поиск" textFill="#f8f5f5" />
+      <TextField fx:id="_input" layoutX="78.0" layoutY="40.0" opacity="0.5" prefHeight="35.0" prefWidth="367.0" promptText="Что хотите найти" />
+   </children>
+</AnchorPane>

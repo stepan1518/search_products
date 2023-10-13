@@ -17,9 +17,6 @@ public class WaiborisParser implements Parser {
             "&page=$NAME$&query=$NAME$&regions=80,38,83,4,64,33,68,70,30,40,86,75,69,1,31,66,110,48,22,71,114" +
             "&resultset=catalog&sort=popular&spp=31&suppressSpellcheck=false";
 
-    private static final String _IMAGE_URL = "https://basket-12.wb.ru/" +
-            "vol$NAME$/part$NAME$/$NAME$/images/big/1.webp";
-
     private static final String _PRODUCT_URL = "https://www.wildberries.ru/catalog/" +
             "$NAME$/detail.aspx";
 
@@ -43,17 +40,6 @@ public class WaiborisParser implements Parser {
         return result.toString();
     }
 
-    private String convertImageUrl(final String id) {
-        var result = new StringBuilder(_IMAGE_URL);
-        int start = _IMAGE_URL.indexOf(_REPLACE_ELEMENT);
-        result = result.replace(start, _REPLACE_ELEMENT.length() + start, id.substring(0, 4));
-        start = result.indexOf(_REPLACE_ELEMENT);
-        result = result.replace(start, _REPLACE_ELEMENT.length() + start, id.substring(0, 6));
-        start = result.indexOf(_REPLACE_ELEMENT);
-        result = result.replace(start, _REPLACE_ELEMENT.length() + start, id);
-        return result.toString();
-    }
-
     private ArrayList<Product> parseJson(final String text) {
         var list_products = new ArrayList<Product>();
 
@@ -61,7 +47,6 @@ public class WaiborisParser implements Parser {
         for (var obj : products) {
             var data = new JSONObject(obj.toString());
             var product = new Product(data);
-            product.image_url = convertImageUrl(product.id);
             product.url = convertProductUrl(product.id);
             list_products.add(product);
         }

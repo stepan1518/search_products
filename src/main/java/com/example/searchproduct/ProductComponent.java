@@ -1,13 +1,15 @@
 package com.example.searchproduct;
 
-import com.example.searchproduct.steppp1518.parser.Product;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-
 import java.io.IOException;
+import java.awt.Desktop;
+import java.net.URI;
+
+import com.example.searchproduct.steppp1518.parser.Product;
 
 public class ProductComponent extends AnchorPane {
     @FXML
@@ -39,6 +41,11 @@ public class ProductComponent extends AnchorPane {
 
     @FXML
     private void onSearchProduct() {
-        System.out.println(_url);
+        try {
+            URI uri = new URI(_url);
+            Desktop.getDesktop().browse(uri);
+        } catch (Exception e) {
+
+        }
     }
 }

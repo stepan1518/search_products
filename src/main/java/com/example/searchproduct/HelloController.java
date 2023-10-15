@@ -1,31 +1,63 @@
 package com.example.searchproduct;
 
+import com.example.searchproduct.steppp1518.parser.ParseRequest;
+import com.example.searchproduct.steppp1518.parser.Product;
 import com.example.searchproduct.steppp1518.parser.WaiborisParser;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
 
 import java.util.Collections;
+import java.util.List;
 
 public class HelloController {
     @FXML
     private TextField _input;
     @FXML
     private ListView _items;
-    private final WaiborisParser _parser = new WaiborisParser();
+    @FXML
+    private Text _page_text;
+    private final int _MAX_PAGE_COUNT = 10;
+    private final ParseRequest request = new ParseRequest(WaiborisParser.class, _MAX_PAGE_COUNT);
+    private int _page = 1;
+    private final int _ELEMENTS_COUNT = 100;
+    private int _page_count = 1;
+    private List<Product> _products = null;
     @FXML
     protected void onSearchButtonClick() {
-        _items.getItems().clear();
-
+        _page = 1;
         var text = _input.getText();
-        if (text.length() == 0) {return;}
-        var products = _parser.search(text, 1);
-        if (products == null || products.size() == 0) {return;}
-
-        Collections.sort(products);
-        products.forEach(el -> _items.getItems().addAll(new ProductComponent(el)));
+        if (text.length() == 0) {_products = null; updatePage(); return;}
+        _products = request.search(text);
+        if (_products == null || _products.size() == 0) {updatePage(); return;}
+        Collections.sort(_products);
+        _page_count = Math.max((int)Math.ceil((double)_products.size() / _ELEMENTS_COUNT), 1);
+        updatePage();
+    }
+    @FXML
+    private void thenPage() {
+        _page = (_page - 2 + _page_count) % _page_count + 1;
+        updatePage();
+    }
+    @FXML
+    private void nextPage() {
+        _page = _page % _page_count + 1;
+        updatePage();
+    }
+    private void updatePage() {
+        _items.getItems().clear();
+        if (_products == null || _products.size() == 0) {
+            _page = 1;
+            _page_text.setText(String.valueOf(_page));
+            return;
+        }
+        _page_text.setText(String.valueOf(_page));
+        for (int i = (_page - 1) * _ELEMENTS_COUNT;
+             i < _page * _ELEMENTS_COUNT && i < _products.size();
+             i++)
+        {
+            _items.getItems().add(new ProductComponent(_products.get(i)));
+        }
     }
 }

@@ -20,7 +20,7 @@ public class ProductComponent extends AnchorPane {
     private Text _price;
     @FXML
     private Text _sale_price;
-    private final String _url;
+    private String _url;
     public ProductComponent(Product product) {
         var loader = new FXMLLoader(getClass().getResource("Product.fxml"));
         loader.setRoot(this);
@@ -31,14 +31,8 @@ public class ProductComponent extends AnchorPane {
             throw new RuntimeException(e);
         }
 
-        _url = product.url;
-
-        _name.setText(product.name);
-        _procent.setText(String.valueOf(product.sale) + "%");
-        _price.setText(String.valueOf(product.price) + "р");
-        _sale_price.setText(String.valueOf(product.sale_price) + "р");
+        updateElement(product);
     }
-
     @FXML
     private void onSearchProduct() {
         try {
@@ -47,5 +41,16 @@ public class ProductComponent extends AnchorPane {
         } catch (Exception e) {
 
         }
+    }
+    @FXML
+    private void thenPage() {
+
+    }
+    public void updateElement(final Product product) {
+        _url = product.url;
+        _name.setText(product.name);
+        _procent.setText(String.valueOf(product.sale) + "%");
+        _price.setText(String.valueOf(product.price) + "р");
+        _sale_price.setText(String.valueOf(product.sale_price) + "р");
     }
 }

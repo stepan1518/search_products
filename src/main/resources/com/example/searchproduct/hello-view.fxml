@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -16,5 +17,28 @@
       </AnchorPane>
           <Button layoutX="471.0" layoutY="40.0" mnemonicParsing="false" onAction="#onSearchButtonClick" prefHeight="35.0" prefWidth="104.0" style="-fx-background-color: #F39C63;" text="поиск" textFill="#f8f5f5" />
       <TextField fx:id="_input" layoutX="78.0" layoutY="40.0" opacity="0.5" prefHeight="35.0" prefWidth="367.0" promptText="Что хотите найти" />
+      <Text layoutX="730.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1"
+      fx:id="_page_text">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Text>
+      <Text layoutX="637.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Страница">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Text>
+      <Button layoutX="757.0" layoutY="43.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="24.0" style="-fx-background-color: #F39C63;" text="-" textFill="#f8f5f5"
+      onAction="#thenPage">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="790.0" layoutY="43.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="24.0" style="-fx-background-color: #F39C63;" text="+" textFill="#f8f5f5"
+      onAction="#nextPage">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

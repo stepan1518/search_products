@@ -19,7 +19,7 @@ public class HelloController {
     @FXML
     private Text _page_text;
     private final int _MAX_PAGE_COUNT = 10;
-    private final ParseRequest request = new ParseRequest(WaiborisParser.class, _MAX_PAGE_COUNT);
+    private final ParseRequest _request = new ParseRequest(WaiborisParser.class, _MAX_PAGE_COUNT);
     private int _page = 1;
     private final int _ELEMENTS_COUNT = 100;
     private int _page_count = 1;
@@ -29,7 +29,7 @@ public class HelloController {
         _page = 1;
         var text = _input.getText();
         if (text.length() == 0) {_products = null; updatePage(); return;}
-        _products = request.search(text);
+        _products = _request.search(text);
         if (_products == null || _products.size() == 0) {updatePage(); return;}
         Collections.sort(_products);
         _page_count = Math.max((int)Math.ceil((double)_products.size() / _ELEMENTS_COUNT), 1);

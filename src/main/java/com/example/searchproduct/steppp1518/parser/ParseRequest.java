@@ -1,11 +1,10 @@
 package com.example.searchproduct.steppp1518.parser;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ParseRequest {
     private final Class<? extends Parser> _parser;
@@ -15,36 +14,49 @@ public class ParseRequest {
         _PAGE_COUNT = PAGE_COUNT;
     }
     public List<Product> search(final String product) {
-        List<Product> products = Collections.synchronizedList(new ArrayList<Product>());
-        var parsers = new ArrayList<Parser>();
+        int numThreads = Runtime.getRuntime().availableProcessors();
+        var executor = Executors.newFixedThreadPool(numThreads);
+
+        List<Product> resultList = new ArrayList<>();
+
+        List<Callable<List<Product>>> callables = new ArrayList<>();
 
         for (int i = 0; i < _PAGE_COUNT; i++) {
+            final int currPage = i + 1;
+            callables.add(() -> {
+                List<Product> result = null;
+                try {
+                    var inst = _parser.newInstance();
+                    result = inst.search(product, currPage);
+                } catch (InstantiationException e) {
+                    executor.shutdown();
+                    return null;
+                } catch (IllegalAccessException e) {
+                    executor.shutdown();
+                    return null;
+                }
+                return result;
+            });
+        }
+
+        List<Future<List<Product>>> futures = null;
+        try {
+            futures = executor.invokeAll(callables);
+        } catch (InterruptedException e) {
+            executor.shutdown();
+            return null;
+        }
+
+        for (var future : futures) {
             try {
-                parsers.add(_parser.newInstance());
-            } catch (InstantiationException e) {
-                return null;
-            } catch (IllegalAccessException e) {
-                return null;
+                var result = future.get();
+                resultList.addAll(result);
+            } catch (Exception e) {
+
             }
         }
 
-        var page = new AtomicInteger(1);
-        var isInterrupt = new AtomicBoolean(false);
-
-        parsers.parallelStream().forEach(parser -> {
-            try {
-                if (isInterrupt.get()) Thread.currentThread().interrupt();
-                var data = parser.search(product, page.getAndIncrement());
-                if (data == null || data.size() == 0) {
-                    isInterrupt.set(true);
-                    Thread.currentThread().interrupt();
-                }
-                products.addAll(data);
-            } catch (IOException e) {
-
-            }
-        });
-
-        return products;
+        executor.shutdown();
+        return resultList;
     }
 }

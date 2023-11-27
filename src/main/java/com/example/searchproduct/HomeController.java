@@ -8,10 +8,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public class HelloController {
+public class HomeController {
     @FXML
     private TextField _input;
     @FXML
@@ -24,12 +23,16 @@ public class HelloController {
     private final int _ELEMENTS_COUNT = 100;
     private int _page_count = 1;
     private List<Product> _products = null;
+    private Map<String, List<Product>> _requests = new HashMap();
     @FXML
     protected void onSearchButtonClick() {
         _page = 1;
         var text = _input.getText();
         if (text.length() == 0) {_products = null; updatePage(); return;}
-        _products = _request.search(text);
+        if ((_products = _requests.get(text)) == null) {
+            _products = _request.search(text);
+            _requests.put(text, new ArrayList(_products));
+        }
         if (_products == null || _products.size() == 0) {updatePage(); return;}
         Collections.sort(_products);
         _page_count = Math.max((int)Math.ceil((double)_products.size() / _ELEMENTS_COUNT), 1);

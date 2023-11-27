@@ -42,10 +42,6 @@ public class ProductComponent extends AnchorPane {
 
         }
     }
-    @FXML
-    private void thenPage() {
-
-    }
     public void updateElement(final Product product) {
         _url = product.url;
         _name.setText(product.name);

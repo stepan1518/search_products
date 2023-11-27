@@ -9,6 +9,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WaiborisParser implements Parser {
     private static final String _URL = "https://search.wb.ru/exactmatch/ru/common/v4/" +
@@ -40,21 +41,20 @@ public class WaiborisParser implements Parser {
         return result.toString();
     }
 
-    private ArrayList<Product> parseJson(final String text) {
-        var list_products = new ArrayList<Product>();
+    private List<Product> parseJson(final String text) {
+                var list_products = new ArrayList<Product>();
 
-        var products = new JSONObject(text).getJSONObject("data").getJSONArray("products");
-        for (var obj : products) {
-            var data = new JSONObject(obj.toString());
-            var product = new Product(data);
-            product.url = convertProductUrl(product.id);
-            list_products.add(product);
+                var products = new JSONObject(text).getJSONObject("data").getJSONArray("products");
+                for (var obj : products) {
+                    var data = new JSONObject(obj.toString());
+                    var product = new Product(data, convertProductUrl(data.get("id").toString()));
+                    list_products.add(product);
         }
         return list_products;
     }
 
     @Override
-    public ArrayList<Product> search(final String product, final int page) {
+    public List<Product> search(final String product, final int page) {
         URL obj = null;
         try {
             obj = new URL(convertUrl(product, page));
